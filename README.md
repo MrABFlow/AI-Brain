@@ -18,6 +18,10 @@ This starter kit automatically syncs markdown files from GitHub into a Supabase 
 3. Connect your **Supabase** Project URL and `service_role` secret key to the Supabase Vector Store node.
 4. Connect your **OpenAI** API key to the OpenAI Embeddings node.
 
+
+💡 Quick Tip for n8n: Open ⁠Brain n8n workflow.json⁠ on GitHub, click Copy raw file, then press ⁠Cmd + V⁠ directly on your n8n canvas to import it instantly!
+
+
 ### Step 3: Start Syncing
 Push any `.md` file to your configured repository to automatically embed and store its chunks in Supabase!
 
