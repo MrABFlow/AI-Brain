@@ -1,0 +1,201 @@
+{
+  "name": "Brain flow",
+  "nodes": [
+    {
+      "parameters": {
+        "authentication": "oAuth2",
+        "owner": {
+          "__rl": true,
+          "value": "MrABFlow",
+          "mode": "list",
+          "cachedResultName": "MrABFlow",
+          "cachedResultUrl": "https://github.com/MrABFlow"
+        },
+        "repository": {
+          "__rl": true,
+          "value": "AI-Brain",
+          "mode": "list",
+          "cachedResultName": "AI-Brain",
+          "cachedResultUrl": "https://github.com/MrABFlow/AI-Brain"
+        },
+        "events": [
+          "push"
+        ],
+        "options": {}
+      },
+      "type": "n8n-nodes-base.githubTrigger",
+      "typeVersion": 1,
+      "position": [
+        0,
+        0
+      ],
+      "id": "01d39f5d-ca18-479f-bfd2-dc2acf2777eb",
+      "name": "Github Trigger",
+      "webhookId": "46f672bf-1318-40b9-8aad-fffa7bac02f4",
+      "credentials": {
+        "githubOAuth2Api": {
+          "id": "jZX7pkNfu7NRBQr3",
+          "name": "GitHub account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "authentication": "oAuth2",
+        "resource": "file",
+        "operation": "get",
+        "owner": {
+          "__rl": true,
+          "value": "MrABFlow",
+          "mode": "list",
+          "cachedResultName": "MrABFlow",
+          "cachedResultUrl": "https://github.com/MrABFlow"
+        },
+        "repository": {
+          "__rl": true,
+          "value": "AI-Brain",
+          "mode": "list",
+          "cachedResultName": "AI-Brain",
+          "cachedResultUrl": "https://github.com/MrABFlow/AI-Brain"
+        },
+        "filePath": "={{ $json.commits[0].added[0] || $json.commits[0].modified[0] }}",
+        "asBinaryProperty": false,
+        "additionalParameters": {}
+      },
+      "type": "n8n-nodes-base.github",
+      "typeVersion": 1.1,
+      "position": [
+        224,
+        0
+      ],
+      "id": "3f635ea6-d779-4b95-88c7-e6339c54fff9",
+      "name": "Get a file",
+      "webhookId": "deb50c51-128f-475a-90c2-69dd457b9527",
+      "credentials": {
+        "githubOAuth2Api": {
+          "id": "jZX7pkNfu7NRBQr3",
+          "name": "GitHub account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "mode": "insert",
+        "tableName": {
+          "__rl": true,
+          "value": "brain_chunks",
+          "mode": "list",
+          "cachedResultName": "brain_chunks"
+        },
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.vectorStoreSupabase",
+      "typeVersion": 1.3,
+      "position": [
+        448,
+        0
+      ],
+      "id": "30e1f459-7b54-4a1e-a5d8-b62fb30a254b",
+      "name": "Supabase Vector Store",
+      "credentials": {
+        "supabaseApi": {
+          "id": "cMyFsM2BlbnuW59D",
+          "name": "Supabase account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.embeddingsOpenAi",
+      "typeVersion": 1.2,
+      "position": [
+        496,
+        208
+      ],
+      "id": "9e58fe60-e723-4a15-86a4-b8dcecfc1559",
+      "name": "Embeddings OpenAI",
+      "credentials": {
+        "openAiApi": {
+          "id": null,
+          "name": "",
+          "__aiGatewayManaged": true
+        }
+      }
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.documentDefaultDataLoader",
+      "typeVersion": 1.1,
+      "position": [
+        592,
+        208
+      ],
+      "id": "d2bdf0b0-58ac-464e-8415-9729b16290ac",
+      "name": "Default Data Loader"
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Github Trigger": {
+      "main": [
+        [
+          {
+            "node": "Get a file",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get a file": {
+      "main": [
+        [
+          {
+            "node": "Supabase Vector Store",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Embeddings OpenAI": {
+      "ai_embedding": [
+        [
+          {
+            "node": "Supabase Vector Store",
+            "type": "ai_embedding",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Default Data Loader": {
+      "ai_document": [
+        [
+          {
+            "node": "Supabase Vector Store",
+            "type": "ai_document",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": true,
+  "settings": {
+    "executionOrder": "v1",
+    "binaryMode": "separate"
+  },
+  "versionId": "888e70a6-3e1d-4050-a0b0-5d7e1d289619",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "5da7cdb49d13d953705e1fc044f396b7dce733224debe649d6e1a132ac78c8b7"
+  },
+  "nodeGroups": [],
+  "id": "SbdecpZ4mMJW6qXg",
+  "tags": []
+}
